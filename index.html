@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的甜點小舖 - 所有商品</title>
+    <style>
+        /* 基礎設定 */
+        body { 
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            color: #4a4a4a; 
+            background-color: #fce4ec; 
+            background-image: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%); 
+        }
+        
+        /* 頂部橫幅 */
+        .top-banner { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 10px 40px; 
+            font-size: 13px; 
+            color: #d81b60; 
+            background-color: rgba(255, 255, 255, 0.7); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5); 
+        }
+        
+        /* 導覽列 */
+        .header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 30px 40px; 
+            position: relative; 
+            background-color: rgba(255, 255, 255, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5); 
+        }
+        .header-icons { 
+            position: absolute; 
+            left: 40px; 
+            font-size: 20px; 
+            color: #555;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .header-icons span {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .header-icons span:hover {
+            color: #d81b60; 
+        }
+        .cart-icon-wrapper {
+            position: relative;
+        }
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: #d81b60;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .logo { 
+            font-size: 28px; 
+            font-weight: bold; 
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; 
+            letter-spacing: 2px; 
+            color: #d81b60; 
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8); 
+        }
+        
+        /* 麵包屑導覽 */
+        .breadcrumb { 
+            padding: 15px 40px; 
+            color: #888; 
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5); 
+        }
+        .breadcrumb span { cursor: pointer; }
+        .breadcrumb span:hover { color: #d81b60; }
+        
+        /* 主要內容區 */
+        .main-content { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+        }
+        
+        /* 頁面標題 */
+        .page-title { 
+            font-size: 24px; 
+            font-weight: normal; 
+            margin-bottom: 30px; 
+            border-left: 4px solid #ce93d8; 
+            padding-left: 15px; 
+            display: flex;
+            align-items: center;
+            color: #555;
+        }
+        
+        /* 工具列 */
+        .toolbar { 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 14px; 
+            margin-bottom: 30px; 
+            color: #666; 
+            background: rgba(255,255,255,0.6);
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+        .toolbar-left span, .toolbar-right span { cursor: pointer; margin-right: 15px; transition: color 0.2s; }
+        .toolbar-left span:hover, .toolbar-right span:hover { color: #d81b60; }
+        
+        /* 產品網格 */
+        .product-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 25px; 
+        }
+        
+        /* 產品卡片 */
+        .product-card { 
+            text-align: left; 
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.85); 
+            border-radius: 12px; 
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer; 
+        }
+        .product-card:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .product-image { 
+            height: 300px; 
+            position: relative; 
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fdf2f6; 
+        }
+        .product-image img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .product-image img { transform: scale(1.08); }
+        .location-tag { 
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            background: rgba(255, 255, 255, 0.95); 
+            color: #d81b60; 
+            padding: 4px 10px; 
+            font-size: 12px; 
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .favorite-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: white;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #ccc;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: color 0.2s, transform 0.2s;
+            z-index: 2;
+        }
+        .favorite-btn:hover { color: #ff4081; transform: scale(1.1); }
+        
+        .product-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
+        .product-title { font-size: 14px; line-height: 1.5; margin-bottom: 10px; color: #444; flex-grow: 1; font-weight: 500; }
+        .product-price { color: #d81b60; font-size: 16px; font-weight: bold; margin-bottom: 15px; }
+        
+        .add-to-cart { 
+            display: block; width: 100%; padding: 12px 0; background-color: #f48fb1; color: white; 
+            text-align: center; font-size: 14px; font-weight: bold; border: none; border-radius: 8px; 
+            cursor: pointer; transition: background-color 0.3s, transform 0.1s; position: relative; z-index: 2; 
+        }
+        .add-to-cart:hover { background-color: #f06292; }
+        .add-to-cart:active { transform: scale(0.98); }
+
+        /* 彈出視窗共用樣式 (Modal) */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 15px; max-width: 600px; width: 90%;
+            position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transform: translateY(-20px);
+            transition: transform 0.3s ease; display: flex; flex-direction: column; gap: 20px;
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-close {
+            position: absolute; top: 15px; right: 20px; font-size: 24px; color: #999; cursor: pointer;
+            background: none; border: none;
+        }
+        .modal-close:hover { color: #d81b60; }
+        
+        /* 商品介紹 Modal */
+        .modal-body { display: flex; gap: 20px; }
+        .modal-image { width: 50%; border-radius: 10px; object-fit: cover; background-color: #fdf2f6; }
+        .modal-info { width: 50%; display: flex; flex-direction: column; }
+        .modal-title { font-size: 20px; color: #333; margin: 0 0 10px 0; line-height: 1.4; }
+        .modal-price { font-size: 22px; color: #d81b60; font-weight: bold; margin-bottom: 15px; }
+        .modal-desc { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
+
+        /* 購物車側邊欄 */
+        .cart-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); z-index: 1001; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .cart-overlay.active { display: block; opacity: 1; }
+        .cart-sidebar {
+            position: fixed; top: 0; right: -400px; width: 400px; max-width: 100%; height: 100vh;
+            background: white; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: right 0.3s ease;
+            z-index: 1002; display: flex; flex-direction: column;
+        }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { padding: 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+        .cart-header h2 { margin: 0; font-size: 20px; color: #333; }
+        .cart-items { flex-grow: 1; overflow-y: auto; padding: 20px; }
+        .empty-cart { text-align: center; color: #999; margin-top: 50px; font-size: 15px; }
+        .cart-item { display: flex; margin-bottom: 20px; border-bottom: 1px solid #f9f9f9; padding-bottom: 15px; }
+        .cart-item img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; margin-right: 15px; }
+        .cart-item-info { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .cart-item-title { font-size: 14px; color: #444; line-height: 1.4; margin-bottom: 5px; }
+        .cart-item-price { color: #d81b60; font-weight: bold; font-size: 14px; }
+        .cart-item-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .qty-controls { display: flex; align-items: center; gap: 10px; }
+        .qty-btn { background: #f0f0f0; border: none; width: 28px; height: 28px; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; color: #555; }
+        .qty-btn:hover { background: #e0e0e0; }
+        .remove-btn { background: none; border: none; color: #999; font-size: 12px; cursor: pointer; text-decoration: underline; }
+        .remove-btn:hover { color: #d81b60; }
+        .cart-footer { padding: 20px; border-top: 1px solid #f0f0f0; background: #fafafa; }
+        .cart-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; color: #333; margin-bottom: 15px; }
+        
+        /* 結帳表單 Modal 特殊樣式 */
+        .checkout-form { display: flex; flex-direction: column; gap: 15px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 14px; color: #555; font-weight: bold; }
+        .form-group input, .form-group select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; font-family: inherit; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #f48fb1; box-shadow: 0 0 0 2px rgba(244,143,177,0.2); }
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+
+        @media (max-width: 600px) {
+            .modal-body { flex-direction: column; }
+            .modal-image, .modal-info { width: 100%; }
+            .product-grid { grid-template-columns: 1fr; }
+            .cart-sidebar { width: 100%; right: -100%; }
+            .form-row { flex-direction: column; gap: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 頂部橫幅 -->
+    <div class="top-banner">
+        <span>🌸 11月限定夢幻甜點將於 10.12 (一) 晚上 21:00 開放預訂。</span>
+        <span>HANDMADE DESSERTS</span>
+    </div>
+
+    <!-- 導覽列 -->
+    <header class="header">
+        <div class="header-icons">
+            <span title="選單">三</span> 
+            <span title="搜尋">🔍</span>
+            <span title="會員登入">👤</span>
+            <!-- 購物車圖示與數量標記 -->
+            <div class="cart-icon-wrapper" onclick="openCart()">
+                <span title="購物車">🛒</span>
+                <div class="cart-badge" id="cartBadge" style="display: none;">0</div>
+            </div>
+        </div>
+        <div class="logo">我的甜點小舖</div>
+    </header>
+
+    <!-- 麵包屑導覽 -->
+    <div class="breadcrumb">
+        <span title="回首頁">🏠 首頁</span> > <span>所有商品</span>
+    </div>
+
+    <!-- 主要內容區 -->
+    <main class="main-content">
+        <h1 class="page-title">所有商品</h1>
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <span>預設排序 ∨</span> 
+                <span>所有篩選條件 <span class="filter-icon">0</span> ∨</span>
+            </div>
+            <div class="toolbar-right">
+                <span>共 42 件商品</span> 
+                <span title="網格檢視">⊞</span> 
+                <span title="列表檢視">≡</span>
+            </div>
+        </div>
+
+        <!-- 產品網格 -->
+        <div class="product-grid">
+            
+            <!-- 產品 1: 台北限定香蕉蛋糕 (使用您的自訂照片) -->
+            <div class="product-card" onclick="openProductModal(this)" data-desc="這款蛋糕使用新鮮香蕉泥與頂級鮮奶製成，內餡搭配手工熬煮的濃郁焦糖布蕾與滑順鮮奶油。">
+                <div class="product-image">
+                    <!-- 已保留您指定的照片檔名 -->
+                    <img src="image_9e82f5.jpg" alt="台北限定香蕉焦糖蛋糕">
+                    <div class="location-tag">台北大安</div>
+                    <div class="favorite-btn" title="加入收藏" onclick="event.stopPropagation(); toggleFavorite(this)">♥</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-title">(葷) 香蕉牛奶焦糖布蕾奶餡鮮奶油蛋糕 4吋【台北10月限定】</div>
+                    <div class="product-price">NT$1,080</div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(this)">加入購物車</button>
+                </div>
+            </div>
+
+            <!-- 產品 2: 全新法式栗子蒙布朗蛋糕 (替換原重複的台中香蕉蛋糕) -->
+            <div class="product-card" onclick="openProductModal(this)" data-desc="秋季限定的法式浪漫！嚴選法國進口栗子泥，搭配輕盈香草香緹與酥脆蛋白餅底，入口即化的濃郁栗子香氣，是秋日午後的最完美點綴。">
+                <div class="product-image">
+                    <img src="https://image.pollinations.ai/prompt/French%20chestnut%20Mont%20Blanc%20cake%20dessert,%20food%20photography?width=600&height=600&nologo=true" alt="法式栗子蒙布朗蛋糕">
+                    <div class="location-tag">台中梅川西</div>
+                    <div class="favorite-btn" title="加入收藏" onclick="event.stopPropagation(); toggleFavorite(this)">♥</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-title">法式栗子蒙布朗蛋糕 6吋【秋季限定】</div>
+                    <div class="product-price">NT$980</div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(this)">加入購物車</button>
+                </div>
+            </div>
+
+            <!-- 產品 3 -->
+            <div class="product-card" onclick="openProductModal(this)" data-desc="嚴選日本空運來台的頂級麝香葡萄，搭配清香柚子果醬與純淨蜂蜜特調的雙層鮮奶油。">
+                <div class="product-image">
+                    <img src="https://image.pollinations.ai/prompt/A%20cake%20decorated%20with%20fresh%20green%20muscat%20grapes,%20food%20photography?width=600&height=600&nologo=true" alt="麝香葡萄蛋糕">
+                    <div class="location-tag">台中梅川西</div>
+                    <div class="favorite-btn" title="加入收藏" onclick="event.stopPropagation(); toggleFavorite(this)">♥</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-title">香柚麝香葡萄蜂蜜雙層鮮奶油蛋糕【台中10月限定】</div>
+                    <div class="product-price">NT$2,380</div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(this)">加入購物車</button>
+                </div>
+            </div>
+
+            <!-- 產品 4 -->
+            <div class="product-card" onclick="openProductModal(this)" data-desc="使用北海道十勝產區頂級生乳製作的內餡，奶香濃郁卻如雲朵般輕盈化口。捲入大量當季新鮮草莓。">
+                <div class="product-image">
+                    <img src="https://image.pollinations.ai/prompt/Strawberry%20swiss%20roll%20cake%20with%20cream,%20food%20photography?width=600&height=600&nologo=true" alt="草莓生乳捲">
+                    <div class="location-tag">全台宅配</div>
+                    <div class="favorite-btn" title="加入收藏" onclick="event.stopPropagation(); toggleFavorite(this)">♥</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-title">北海道十勝草莓生乳捲【季節限定】</div>
+                    <div class="product-price">NT$650</div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(this)">加入購物車</button>
+                </div>
+            </div>
+            
+            <!-- 產品 5 -->
+            <div class="product-card" onclick="openProductModal(this)" data-desc="職人手工精心製作，外殼薄脆，內餡濕潤。包含覆盆子玫瑰、開心果、海鹽焦糖等多種口味。">
+                <div class="product-image">
+                    <img src="https://image.pollinations.ai/prompt/A%20gift%20box%20of%20colorful%20french%20macarons,%20food%20photography?width=600&height=600&nologo=true" alt="綜合馬卡龍">
+                    <div class="location-tag">全台宅配</div>
+                    <div class="favorite-btn" title="加入收藏" onclick="event.stopPropagation(); toggleFavorite(this)">♥</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-title">法式夢幻綜合馬卡龍禮盒 (9入)</div>
+                    <div class="product-price">NT$880</div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(this)">加入購物車</button>
+                </div>
+            </div>
+            
+            <!-- 產品 6 -->
+            <div class="product-card" onclick="openProductModal(this)" data-desc="將新鮮檸檬汁熬煮成絲滑濃郁的檸檬凝乳，擠成美麗的玫瑰花形狀，搭配手工捏製的酥脆杏仁塔皮。">
+                <div class="product-image">
+                    <img src="https://image.pollinations.ai/prompt/French%20lemon%20tart%20with%20meringue%20rose,%20food%20photography?width=600&height=600&nologo=true" alt="檸檬塔">
+                    <div class="location-tag">台北大安</div>
+                    <div class="favorite-btn" title="加入收藏" onclick="event.stopPropagation(); toggleFavorite(this)">♥</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-title">經典法式玫瑰檸檬塔 6吋</div>
+                    <div class="product-price">NT$720</div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(this)">加入購物車</button>
+                </div>
+            </div>
+            
+            <!-- 產品 7 -->
+            <div class="product-card" onclick="openProductModal(this)" data-desc="嚴選日本丸久小山園若竹等級抹茶粉，層層堆疊超過20層的手工法式薄餅，夾入抹茶鮮奶油。">
+                <div class="product-image">
+                    <img src="https://image.pollinations.ai/prompt/Slice%20of%20matcha%20mille%20crepe%20cake,%20food%20photography?width=600&height=600&nologo=true" alt="抹茶千層">
+                    <div class="location-tag">台中梅川西</div>
+                    <div class="favorite-btn" title="加入收藏" onclick="event.stopPropagation(); toggleFavorite(this)">♥</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-title">小山園抹茶紅豆千層蛋糕 8吋</div>
+                    <div class="product-price">NT$1,450</div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(this)">加入購物車</button>
+                </div>
+            </div>
+            
+            <!-- 產品 8 -->
+            <div class="product-card" onclick="openProductModal(this)" data-desc="採用70%法國頂級法芙娜黑巧克力製作，外酥內軟的銷魂口感。中心包覆著流心焦糖與鹽之花。">
+                <div class="product-image">
+                    <img src="https://image.pollinations.ai/prompt/Chocolate%20cookies%20with%20sea%20salt,%20food%20photography?width=600&height=600&nologo=true" alt="巧克力餅乾">
+                    <div class="location-tag">全台宅配</div>
+                    <div class="favorite-btn" title="加入收藏" onclick="event.stopPropagation(); toggleFavorite(this)">♥</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-title">海鹽焦糖特濃巧克力軟餅乾 (6片裝)</div>
+                    <div class="product-price">NT$480</div>
+                    <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(this)">加入購物車</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 商品介紹彈出視窗 -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('productModal')">×</button>
+            <div class="modal-body">
+                <img src="" alt="商品圖片" class="modal-image" id="modalImg">
+                <div class="modal-info">
+                    <h2 class="modal-title" id="modalTitle">商品名稱</h2>
+                    <div class="modal-price" id="modalPrice">NT$0</div>
+                    <div class="modal-desc" id="modalDesc">商品詳細介紹...</div>
+                    <button class="add-to-cart" onclick="addFromModal()">加入購物車</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 結帳表單彈出視窗 -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" onclick="closeModal('checkoutModal')">×</button>
+            <h2 class="modal-title" style="margin-bottom: 20px; border-bottom: 2px solid #fce4ec; padding-bottom: 10px;">填寫結帳資訊</h2>
+            <form class="checkout-form" onsubmit="submitOrder(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="orderName">訂購人姓名 *</label>
+                        <input type="text" id="orderName" required placeholder="請輸入姓名">
+                    </div>
+                    <div class="form-group">
+                        <label for="orderPhone">聯絡電話 *</label>
+                        <input type="tel" id="orderPhone" required placeholder="09XX-XXX-XXX">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="deliveryMethod">取件/配送方式 *</label>
+                    <select id="deliveryMethod" required>
+                        <option value="pickup_taipei">台北大安門市自取</option>
+                        <option value="pickup_taichung">台中梅川西門市自取</option>
+                        <option value="delivery">全台黑貓低溫宅配 (+$160)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">付款方式 *</label>
+                    <select id="paymentMethod" required>
+                        <option value="credit_card">信用卡線上刷卡</option>
+                        <option value="line_pay">LINE Pay</option>
+                        <option value="atm">ATM 銀行轉帳</option>
+                        <option value="cash_on_delivery">貨到付款/門市付款</option>
+                    </select>
+                </div>
+                <div style="text-align: right; margin-top: 10px;">
+                    <span style="font-size: 14px; color: #666; margin-right: 15px;">結帳總金額: <span id="checkoutTotalAmount" style="color: #d81b60; font-size: 18px; font-weight: bold;">NT$0</span></span>
+                    <button type="submit" class="add-to-cart" style="width: auto; padding: 12px 30px; display: inline-block;">確認結帳送出</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 購物車側邊欄 -->
+    <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>🛒 購物車</h2>
+            <button class="modal-close" style="position: static;" onclick="closeCart()">×</button>
+        </div>
+        <div class="cart-items" id="cartItemsContainer">
+            <!-- 購物車內容將透過 JS 動態產生 -->
+            <div class="empty-cart">購物車目前是空的喔！</div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>總計:</span>
+                <span id="cartTotalDisplay" style="color: #d81b60;">NT$0</span>
+            </div>
+            <button class="add-to-cart" style="font-size: 16px; padding: 15px 0;" onclick="proceedToCheckout()">前往結帳</button>
+        </div>
+    </div>
+
+    <!-- JavaScript 購物車與互動邏輯 -->
+    <script>
+        // --- 愛心收藏 ---
+        function toggleFavorite(btn) {
+            btn.style.color = btn.style.color === 'rgb(255, 64, 129)' ? '#ccc' : '#ff4081';
+        }
+
+        // --- 商品彈出視窗 ---
+        let currentSelectedCard = null; // 記錄目前點擊的卡片
+        function openProductModal(card) {
+            currentSelectedCard = card;
+            document.getElementById('modalTitle').innerText = card.querySelector('.product-title').innerText;
+            document.getElementById('modalPrice').innerText = card.querySelector('.product-price').innerText;
+            document.getElementById('modalImg').src = card.querySelector('img').src;
+            document.getElementById('modalDesc').innerText = card.getAttribute('data-desc'); 
+
+            const modal = document.getElementById('productModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+        }
+        function addFromModal() {
+            if (currentSelectedCard) addToCart(currentSelectedCard);
+            closeModal('productModal');
+        }
+
+        // --- 共用關閉 Modal ---
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            setTimeout(() => modal.style.display = 'none', 300);
+        }
+        // 點擊背景關閉
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) closeModal(this.id);
+            });
+        });
+
+        // --- 購物車核心邏輯 ---
+        let cart = []; // 存放購物車資料的陣列
+
+        function addToCart(element) {
+            // 自動往上層尋找包含商品資訊的 product-card
+            const card = element.closest('.product-card') || element; 
+            const title = card.querySelector('.product-title').innerText;
+            const priceStr = card.querySelector('.product-price').innerText;
+            const imgSrc = card.querySelector('img').src;
+            
+            // 將價格字串 (例如 "NT$1,080") 轉換為純數字
+            const price = parseInt(priceStr.replace(/[^0-9]/g, ''));
+
+            // 檢查是否已在購物車內
+            const existingItem = cart.find(item => item.title === title);
+            if (existingItem) {
+                existingItem.qty += 1; // 已存在則數量加一
+            } else {
+                cart.push({ title: title, price: price, imgSrc: imgSrc, qty: 1 }); // 新增商品
+            }
+            
+            updateCartUI(); // 更新畫面
+            openCart();     // 顯示購物車
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cartItemsContainer');
+            const totalDisplay = document.getElementById('cartTotalDisplay');
+            const badge = document.getElementById('cartBadge');
+            const checkoutTotal = document.getElementById('checkoutTotalAmount');
+            
+            container.innerHTML = '';
+            let totalAmount = 0;
+            let totalItems = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="empty-cart">購物車目前是空的喔！快去挑選甜點吧🤤</div>';
+            } else {
+                cart.forEach((item, index) => {
+                    totalAmount += item.price * item.qty;
+                    totalItems += item.qty;
+                    
+                    container.innerHTML += `
+                        <div class="cart-item">
+                            <img src="${item.imgSrc}" alt="商品">
+                            <div class="cart-item-info">
+                                <div class="cart-item-title">${item.title}</div>
+                                <div class="cart-item-controls">
+                                    <span class="cart-item-price">NT$${item.price.toLocaleString()}</span>
+                                    <div class="qty-controls">
+                                        <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                                        <span>${item.qty}</span>
+                                        <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                                    </div>
+                                </div>
+                                <div style="text-align:right; margin-top:5px;">
+                                    <button class="remove-btn" onclick="removeItem(${index})">移除</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // 更新總金額與數量標記
+            const formattedTotal = 'NT$' + totalAmount.toLocaleString();
+            totalDisplay.innerText = formattedTotal;
+            checkoutTotal.innerText = formattedTotal;
+            badge.innerText = totalItems;
+            badge.style.display = totalItems > 0 ? 'flex' : 'none';
+        }
+
+        function changeQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1); // 如果數量扣到0，自動移除
+            }
+            updateCartUI();
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        // --- 購物車側邊欄顯示控制 ---
+        function openCart() {
+            document.getElementById('cartSidebar').classList.add('open');
+            document.getElementById('cartOverlay').classList.add('active');
+        }
+        function closeCart() {
+            document.getElementById('cartSidebar').classList.remove('open');
+            document.getElementById('cartOverlay').classList.remove('active');
+        }
+
+        // --- 結帳流程 ---
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                alert('購物車是空的，無法結帳喔！');
+                return;
+            }
+            closeCart(); // 關閉側邊欄
+            
+            // 開啟結帳表單
+            const modal = document.getElementById('checkoutModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+        }
+
+        function submitOrder(e) {
+            e.preventDefault(); // 防止表單重整頁面
+            const name = document.getElementById('orderName').value;
+            
+            alert(`訂單建立成功！🎉\n親愛的 ${name} 您好，感謝您的購買，我們將盡快為您安排出貨！`);
+            
+            // 結帳成功後清空購物車與表單
+            cart = [];
+            updateCartUI();
+            e.target.reset();
+            closeModal('checkoutModal');
+        }
+    </script>
+</body>
+</html>
